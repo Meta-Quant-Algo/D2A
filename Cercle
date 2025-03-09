@@ -1,0 +1,18 @@
+Program Cercle;
+Var
+    rayon:Integer;
+    diametre,surface,circonfrence:Real;
+Const
+    PI = 3.14;
+Begin
+    writeln('Donner le rayon du cercle ?');
+    readln(rayon);
+
+    diametre := rayon*2;
+    surface := PI*rayon*rayon;
+    circonference := PI*rayon*2;
+
+    writeln('Le diametre du cercle de rayon ', rayon,'est de :', diametre);
+    writeln('La surface du cercle de rayon ', rayon,'est de :', surface);
+    writeln('La circonference du cercle de rayon ', rayon,'est de :', circonference);
+End.
