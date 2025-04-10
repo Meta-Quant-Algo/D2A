@@ -1,0 +1,109 @@
+# Je viens de rediger un plan pour faire une analyse de regression multiple
+# Les données sont sur mon ordinateur et je demanderais a ChatGPT de m'assister pour le codification
+
+# Premiere Etape
+# Je dois converir les fichier qui contient les donnes de format excel (.xls)
+  vers comma separated value (.csv)
+# Code Source en Python
+  
+import os
+import pandas as pd
+import glob
+import shutil
+
+# === 1. Dossiers ===
+xls_folder = './DATACOT/'
+output_folder = './cleaned_cot/'
+backup_folder = './backup_cot_xls/'
+
+# Créer les dossiers de sortie
+os.makedirs(output_folder, exist_ok=True)
+os.makedirs(backup_folder, exist_ok=True)
+
+# === 2. Fichiers .xls ===
+xls_files = glob.glob(os.path.join(xls_folder, '*.xls'))
+
+# === 3. Paramètres de filtrage ===
+colonnes_a_garder = [
+    'Market_and_Exchange_Names',
+    'Report_Date_as_MM_DD_YYYY',
+    'Open_Interest_All',
+    'Asset_Mgr_Positions_Long_All',
+    'Lev_Money_Positions_Long_All',
+    'Other_Rept_Positions_Long_All'
+]
+
+devises = [
+    'SO AFRICAN RAND',
+    'SWISS FRANC',
+    'CANADIAN DOLLAR'
+]
+
+# === 4. Traitement sécurisé ===
+for file_path in xls_files:
+    try:
+        # Faire une copie de sauvegarde
+        shutil.copy(file_path, backup_folder)
+
+        # Charger le fichier
+        df = pd.read_excel(file_path, engine='xlrd')
+
+        # Vérifier si la colonne existe avant de filtrer
+        if 'Market_and_Exchange_Names' not in df.columns:
+            print(f"⚠️ Colonne manquante dans {file_path}. Fichier ignoré.")
+            continue
+
+        # Filtrer par devise
+        df_filtered = df[df['Market_and_Exchange_Names'].str.upper().apply(
+            lambda x: any(devise in x for devise in [d.upper() for d in devises])
+        )]
+
+
+        # Vérifier si des données ont été trouvées
+        if df_filtered.empty:
+            print(f"⚠️ Aucun résultat pour les devises dans {file_path}. Fichier ignoré.")
+            continue
+
+        # Sélectionner les colonnes disponibles
+        colonnes_existantes = [col for col in colonnes_a_garder if col in df_filtered.columns]
+        df_final = df_filtered[colonnes_existantes]
+
+        # Sauvegarder uniquement si le DataFrame contient des données
+        if not df_final.empty:
+            base_name = os.path.basename(file_path).replace('.xls', '.csv')
+            output_path = os.path.join(output_folder, base_name)
+            df_final.to_csv(output_path, index=False)
+            print(f"✅ Fichier nettoyé et sauvegardé : {output_path}")
+        else:
+            print(f"⚠️ {file_path} contient des colonnes mais aucune donnée à sauvegarder.")
+
+    except Exception as e:
+        print(f"❌ Erreur avec le fichier {file_path} : {e}")
+
+# === 5. Suppression des .xls UNIQUEMENT si les fichiers nettoyés existent ===
+for file_path in xls_files:
+    base_name = os.path.basename(file_path).replace('.xls', '.csv')
+    cleaned_path = os.path.join(output_folder, base_name)
+    
+    if os.path.exists(cleaned_path) and os.path.getsize(cleaned_path) > 0:
+        try:
+            os.remove(file_path)
+            print(f"🗑️ Ancien fichier supprimé : {file_path}")
+        except Exception as e:
+            print(f"❌ Impossible de supprimer {file_path} : {e}")
+    else:
+        print(f"🚫 Fichier conservé (pas de version nettoyée) : {file_path}")
+
+# Resultats
+✅ Fichier nettoyé et sauvegardé : ./cleaned_cot/FinFutYY 2020.csv
+✅ Fichier nettoyé et sauvegardé : ./cleaned_cot/FinFutYY 2021.csv
+✅ Fichier nettoyé et sauvegardé : ./cleaned_cot/FinFutYY 2022.csv
+✅ Fichier nettoyé et sauvegardé : ./cleaned_cot/FinFutYY 2023.csv
+✅ Fichier nettoyé et sauvegardé : ./cleaned_cot/FinFutYY 2024.csv
+✅ Fichier nettoyé et sauvegardé : ./cleaned_cot/FinFutYY 2025.csv
+🗑️ Ancien fichier supprimé : ./DATACOT\FinFutYY 2020.xls
+🗑️ Ancien fichier supprimé : ./DATACOT\FinFutYY 2021.xls
+🗑️ Ancien fichier supprimé : ./DATACOT\FinFutYY 2022.xls
+🗑️ Ancien fichier supprimé : ./DATACOT\FinFutYY 2023.xls
+🗑️ Ancien fichier supprimé : ./DATACOT\FinFutYY 2024.xls
+🗑️ Ancien fichier supprimé : ./DATACOT\FinFutYY 2025.xls
