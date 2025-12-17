@@ -1,0 +1,87 @@
+<!Doctype html>
+<html lang="fr">
+  <head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="Style/Grid.css" />
+  <title>Thi&eacute;bou R&eacute;sto | Restaurant</title>
+  <style>
+    address {
+      margin-top: 20px;
+      text-align: center;
+    }
+    a {
+      color: white;
+      text-decoration: none;
+    }
+    a:hover {
+      transition: all 1s ease;
+      color: rgb(237, 131, 25);
+    }
+    input {
+      display: none;
+    }
+    .menu-btn {
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+    .menu-icon {
+      height: 4px;
+      width: 20px;
+      background-color: white;
+      margin: 4px 0;
+    }
+    .menu-btn:hover .menu-icon {
+      height: 4px;
+      width: 20px;
+      transition: background-color 1s ease;
+      background-color: rgb(237, 131, 25);
+      margin: 4px 0;
+    }
+  </style>
+  </head>
+  <body class="container">
+  
+    <header class="entete">
+      <input type="checkbox" id="hamburger"/>
+      <img src="Catalogue/Icon2.png"/>
+      <img src="Catalogue/name1.png"/>
+      <label for="hamburger">
+        <button class="menu-btn">
+          <div class="menu-icon"></div>
+          <div class="menu-icon"></div>
+          <div class="menu-icon"></div>
+        </button>
+      </label>
+	  </header>
+
+	  <main class="contenu">
+      <section>
+        <div id="product1">
+        </div>
+        <div id="product2">
+        </div>
+        <div id="product3">
+        </div>
+        <div id="product4">
+        </div>
+        <div id="product5">
+        </div>
+      </section>
+	  </main>
+
+	  <footer class="pied">
+      <address>
+        Copyright &copy; Thiebou Resto <br>
+        <a href="Accueil.html">Accueil</a> &nbsp; &nbsp;
+        <a href="Menu.html">Menu</a> &nbsp; &nbsp;
+        <a href="A propos.html">A propos</a> <br>
+        <a href="mailto:ThiebouResto@gmail.com">Service Client</a> &nbsp; &nbsp;
+        <a href="https://wa.me/221775933674/?text=Bonjour, j'aimerais faire une commande">Reservation</a> <br>
+        <a href="Account.html">Cr&eacute;er un compte</a> <br>
+        All rights deserved
+      </address>
+	  </footer>
+
+  </body>
+</html>
